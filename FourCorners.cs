@@ -7,14 +7,9 @@ namespace FourCorners
     public class FourCorners : Game
     {
         private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        private SpriteBatch spriteBatch;
 
-        private Vector2 ballPosition;
-        private Vector2 ballVelocity;
-
-        private Texture2D ballTexture;
-        private Texture2D wallTexture;
-        private Texture2D shardTexture;
+        private BallSprite ball;
 
         public FourCorners()
         {
@@ -27,19 +22,18 @@ namespace FourCorners
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            ballPosition = new Vector2(
-                GraphicsDevice.Viewport.Width / 2,
-                GraphicsDevice.Viewport.Height / 2
-            );
+            ball = new BallSprite();
 
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            ball.LoadContent(Content);
+
         }
 
         protected override void Update(GameTime gameTime)
@@ -48,6 +42,7 @@ namespace FourCorners
                 Exit();
 
             // TODO: Add your update logic here
+            ball.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -57,6 +52,9 @@ namespace FourCorners
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            spriteBatch.Begin();
+            ball.Draw(gameTime, spriteBatch);
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
