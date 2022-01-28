@@ -12,6 +12,8 @@ namespace FourCorners
 
         private BallSprite ball;
 
+        private Texture2D atlas;
+
         public FourCorners()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -34,7 +36,8 @@ namespace FourCorners
 
             // TODO: use this.Content to load your game content here
             ball.LoadContent(Content);
-            //spriteFont = Content.Load<SpriteFont>("arial");
+            atlas = Content.Load<Texture2D>("64-64-sprite-pack");
+            spriteFont = Content.Load<SpriteFont>("File");
 
         }
 
@@ -56,10 +59,12 @@ namespace FourCorners
             // TODO: Add your drawing code here
             spriteBatch.Begin();
             ball.Draw(gameTime, spriteBatch);
-
-            //spriteBatch.DrawString(spriteFont, "Press ESC to end game", new Vector2(2, 2), Color.Gold);
-            //spriteBatch.DrawString(spriteFont, "Left click to go fast and forward", new Vector2(2, 22), Color.Gold);
-            //spriteBatch.DrawString(spriteFont, "Right click to go slow and backward", new Vector2(2, 42), Color.Gold);
+            spriteBatch.Draw(atlas, new Vector2(350, 50), new Rectangle(0, 32, 32, 32), Color.White);
+            spriteBatch.Draw(atlas, new Vector2(400, 200), new Rectangle(32, 32, 16, 16), Color.White);
+            spriteBatch.Draw(atlas, new Vector2(350, 350), new Rectangle(48, 32, 16, 16), Color.White);
+            spriteBatch.DrawString(spriteFont, "Press ESC to end game", new Vector2(2, 2), Color.Gold);
+            spriteBatch.DrawString(spriteFont, "Left click to go fast and forward", new Vector2(2, 22), Color.Gold);
+            spriteBatch.DrawString(spriteFont, "Right click to go slow and backward", new Vector2(2, 42), Color.Gold);
             spriteBatch.End();
 
             base.Draw(gameTime);

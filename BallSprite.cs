@@ -52,13 +52,13 @@ namespace FourCorners
             {
                 if (up)
                 {
-                    xDirection = 2;
-                    yDirection = -2;
+                    xDirection = 1;
+                    yDirection = -1;
                 }
                 else
                 {
-                    xDirection = 2;
-                    yDirection = 2;
+                    xDirection = 1;
+                    yDirection = 1;
                 }
                 up = !up;
             }
@@ -66,13 +66,13 @@ namespace FourCorners
             {
                 if (!up)
                 {
-                    xDirection = -1;
-                    yDirection = -1;
+                    xDirection = -2;
+                    yDirection = -2;
                 }
                 else
                 {
-                    xDirection = -1;
-                    yDirection = 1;
+                    xDirection = -2;
+                    yDirection = 2;
                 }
                 up = !up;
             }
