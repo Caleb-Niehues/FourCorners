@@ -23,7 +23,7 @@ namespace FourCorners
         private int xDirection;
         private int yDirection;
         
-        private int speed = 25;
+        private int speed = 50;
 
         private bool up = true;
 
@@ -47,17 +47,18 @@ namespace FourCorners
             previousMouseState = mouseState;
             mouseState = Mouse.GetState();
 
+            //maybe flip "fast" direction to push you towards the dead zone?
             if (previousMouseState != mouseState && mouseState.LeftButton == ButtonState.Pressed)
             {
                 if (up)
                 {
-                    xDirection = 4;
-                    yDirection = -4;
+                    xDirection = 2;
+                    yDirection = -2;
                 }
                 else
                 {
-                    xDirection = 4;
-                    yDirection = 4;
+                    xDirection = 2;
+                    yDirection = 2;
                 }
                 up = !up;
             }
