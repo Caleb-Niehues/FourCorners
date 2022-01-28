@@ -34,7 +34,7 @@ namespace FourCorners
 
             // TODO: use this.Content to load your game content here
             ball.LoadContent(Content);
-            spriteFont = Content.Load<SpriteFont>("arial");
+            //spriteFont = Content.Load<SpriteFont>("arial");
 
         }
 
@@ -57,9 +57,9 @@ namespace FourCorners
             spriteBatch.Begin();
             ball.Draw(gameTime, spriteBatch);
 
-            spriteBatch.DrawString(spriteFont, "Press ESC to end game", new Vector2(2, 2), Color.Gold);
-            spriteBatch.DrawString(spriteFont, "Left click to go fast and forward", new Vector2(2, 22), Color.Gold);
-            spriteBatch.DrawString(spriteFont, "Right click to go slow and backward", new Vector2(2, 42), Color.Gold);
+            //spriteBatch.DrawString(spriteFont, "Press ESC to end game", new Vector2(2, 2), Color.Gold);
+            //spriteBatch.DrawString(spriteFont, "Left click to go fast and forward", new Vector2(2, 22), Color.Gold);
+            //spriteBatch.DrawString(spriteFont, "Right click to go slow and backward", new Vector2(2, 42), Color.Gold);
             spriteBatch.End();
 
             base.Draw(gameTime);
