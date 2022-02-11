@@ -42,6 +42,10 @@ namespace FourCorners
         /// </summary>
         public Color Color { get; set; } = Color.White;
 
+        private bool moved = false;
+
+        public bool Moved => moved;
+
         /// <summary>
         /// Loads the sprite texture using the provided ContentManager
         /// </summary>
@@ -74,6 +78,7 @@ namespace FourCorners
                     yDirection = 1;
                 }
                 up = !up;
+                if (!Moved) moved = true;
             }
             else if (previousMouseState != mouseState && mouseState.RightButton == ButtonState.Pressed)
             {
@@ -88,6 +93,7 @@ namespace FourCorners
                     yDirection = 2;
                 }
                 up = !up;
+                if (!Moved) moved = true;
             }
 
             position += (float)gameTime.ElapsedGameTime.TotalSeconds * new Vector2(xDirection * speed, yDirection * speed);

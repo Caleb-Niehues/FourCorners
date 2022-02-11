@@ -80,11 +80,15 @@ namespace FourCorners
                 wall.Draw(gameTime, spriteBatch);
             }
             ball.Draw(gameTime, spriteBatch);
-            if (ball.Bounds.Center != new Vector2(50, 200)) //really hacky check to see if title screen should be displayed, also helps check bounds/sprite alignment
+            if (!ball.Moved)
             {
                 spriteBatch.DrawString(spriteFont, "Press ESC to end game", new Vector2(2, 2), Color.Gold);
                 spriteBatch.DrawString(spriteFont, "Left click to go fast and forward", new Vector2(2, 22), Color.Gold);
                 spriteBatch.DrawString(spriteFont, "Right click to go slow and backward", new Vector2(2, 42), Color.Gold);
+            }
+            else
+            {
+                spriteBatch.DrawString(spriteFont, "Time Survived: N/A", new Vector2(2, 2), Color.Gold);
             }
             spriteBatch.End();
 
