@@ -29,7 +29,7 @@ namespace FourCorners
             ball = new BallSprite();
             walls = new WallSprite[]
             {
-                new WallSprite(new Vector2(50,200), 0, 1),
+                new WallSprite(new Vector2(250,200), 1, 1),
                 new WallSprite(new Vector2(350,200), 0, -1),
                 new WallSprite(new Vector2(450,200), 0, 1)
             };
@@ -63,6 +63,7 @@ namespace FourCorners
                 {
                     ball.Color = Color.Red;
                 }
+                wall.Update(gameTime);
             }
 
             base.Update(gameTime);

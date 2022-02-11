@@ -13,13 +13,13 @@ namespace FourCorners
     {
         private Texture2D texture;
 
-        private Vector2 position = new Vector2(50, 200);
+        private Vector2 position;
 
         private int xDirection;
         private int yDirection;
 
         private int speed = 50; //doubles as a range
-        private int travelled;
+        private double travelled = 0;
 
         private BoundingRectangle bounds;
 
@@ -28,6 +28,12 @@ namespace FourCorners
         /// </summary>
         public BoundingRectangle Bounds => bounds;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="xDirection"></param>
+        /// <param name="yDirection"></param>
         public WallSprite(Vector2 position, int xDirection, int yDirection)
         {
             this.position = position;
@@ -51,10 +57,16 @@ namespace FourCorners
         /// <param name="gameTime">The GameTime</param>
         public void Update(GameTime gameTime)
         {
-
+            travelled += gameTime.ElapsedGameTime.TotalSeconds * Math.Sqrt(Math.Pow(xDirection * speed, 2) + Math.Pow(yDirection * speed, 2));
+            if (Math.Abs(travelled) > speed)
+            {
+                xDirection *= -1;
+                yDirection *= -1;
+                travelled = -speed;
+            }
             position += (float)gameTime.ElapsedGameTime.TotalSeconds * new Vector2(xDirection * speed, yDirection * speed);
-            bounds.X = position.X;
-            bounds.Y = position.Y;
+            bounds.X = position.X - 32;
+            bounds.Y = position.Y - 32;
         }
 
         /// <summary>
