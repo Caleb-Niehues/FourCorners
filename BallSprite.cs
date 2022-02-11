@@ -30,9 +30,17 @@ namespace FourCorners
 
         private short animationFrame;
 
-        private BoundingCircle bounds = new BoundingCircle(new Vector2(0, 0), 16);
+        private BoundingCircle bounds = new BoundingCircle(new Vector2(50-16, 200-16), 16);
 
+        /// <summary>
+        /// 
+        /// </summary>
         public BoundingCircle Bounds => bounds;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Color Color { get; set; } = Color.White;
 
         /// <summary>
         /// Loads the sprite texture using the provided ContentManager
@@ -83,7 +91,8 @@ namespace FourCorners
             }
 
             position += (float)gameTime.ElapsedGameTime.TotalSeconds * new Vector2(xDirection * speed, yDirection * speed);
-            bounds.Center = position;
+            bounds.Center.X = position.X - 16;
+            bounds.Center.Y = position.Y - 16;
         }
 
         /// <summary>
@@ -102,7 +111,7 @@ namespace FourCorners
 
             //Draw the sprite
             var source = new Rectangle(animationFrame * 32, 0, 32, 32);
-            spriteBatch.Draw(texture, position, source, Color.White);
+            spriteBatch.Draw(texture, position, source, Color);
         }
     }
 }

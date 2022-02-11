@@ -11,8 +11,9 @@ namespace FourCorners
         private SpriteFont spriteFont;
 
         private BallSprite ball;
+        private WallSprite[] walls;
 
-        private Texture2D atlas;
+        //private Texture2D atlas;
 
         public FourCorners()
         {
@@ -26,6 +27,12 @@ namespace FourCorners
         {
             // TODO: Add your initialization logic here
             ball = new BallSprite();
+            walls = new WallSprite[]
+            {
+                new WallSprite(new Vector2(250,200), 0, 1),
+                new WallSprite(new Vector2(350,200), 0, -1),
+                new WallSprite(new Vector2(450,200), 0, 1)
+            };
 
             base.Initialize();
         }
@@ -36,7 +43,7 @@ namespace FourCorners
 
             // TODO: use this.Content to load your game content here
             ball.LoadContent(Content);
-            atlas = Content.Load<Texture2D>("64-64-sprite-pack");
+            foreach (var wall in walls) wall.LoadContent(Content);
             spriteFont = Content.Load<SpriteFont>("File");
 
         }
@@ -49,6 +56,15 @@ namespace FourCorners
             // TODO: Add your update logic here
             ball.Update(gameTime);
 
+            ball.Color = Color.White;
+            foreach (var wall in walls)
+            {
+                if (wall.Bounds.CollidesWith(ball.Bounds))
+                {
+                    ball.Color = Color.Red;
+                }
+            }
+
             base.Update(gameTime);
         }
 
@@ -59,12 +75,16 @@ namespace FourCorners
             // TODO: Add your drawing code here
             spriteBatch.Begin();
             ball.Draw(gameTime, spriteBatch);
-            spriteBatch.Draw(atlas, new Vector2(350, 50), new Rectangle(0, 32, 32, 32), Color.White);
-            spriteBatch.Draw(atlas, new Vector2(400, 200), new Rectangle(32, 32, 16, 16), Color.White);
-            spriteBatch.Draw(atlas, new Vector2(350, 350), new Rectangle(48, 32, 16, 16), Color.White);
-            spriteBatch.DrawString(spriteFont, "Press ESC to end game", new Vector2(2, 2), Color.Gold);
-            spriteBatch.DrawString(spriteFont, "Left click to go fast and forward", new Vector2(2, 22), Color.Gold);
-            spriteBatch.DrawString(spriteFont, "Right click to go slow and backward", new Vector2(2, 42), Color.Gold);
+            foreach (var wall in walls)
+            {
+                wall.Draw(gameTime, spriteBatch);
+            }
+            if (ball.Bounds.Center != new Vector2(50, 200)) //really hacky check to see if title screen should be displayed, also helps check bounds/sprite alignment
+            {
+                spriteBatch.DrawString(spriteFont, "Press ESC to end game", new Vector2(2, 2), Color.Gold);
+                spriteBatch.DrawString(spriteFont, "Left click to go fast and forward", new Vector2(2, 22), Color.Gold);
+                spriteBatch.DrawString(spriteFont, "Right click to go slow and backward", new Vector2(2, 42), Color.Gold);
+            }
             spriteBatch.End();
 
             base.Draw(gameTime);
