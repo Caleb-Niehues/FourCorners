@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using FourCorners.Collisions;
 
 namespace FourCorners
 {
@@ -28,6 +29,10 @@ namespace FourCorners
         private bool up = true;
 
         private short animationFrame;
+
+        private BoundingCircle bounds = new BoundingCircle(new Vector2(0, 0), 16);
+
+        public BoundingCircle Bounds => bounds;
 
         /// <summary>
         /// Loads the sprite texture using the provided ContentManager
@@ -78,6 +83,7 @@ namespace FourCorners
             }
 
             position += (float)gameTime.ElapsedGameTime.TotalSeconds * new Vector2(xDirection * speed, yDirection * speed);
+            bounds.Center = position;
         }
 
         /// <summary>
