@@ -29,7 +29,7 @@ namespace FourCorners
             ball = new BallSprite();
             walls = new WallSprite[]
             {
-                new WallSprite(new Vector2(250,200), 0, 1),
+                new WallSprite(new Vector2(50,200), 0, 1),
                 new WallSprite(new Vector2(350,200), 0, -1),
                 new WallSprite(new Vector2(450,200), 0, 1)
             };
@@ -74,11 +74,11 @@ namespace FourCorners
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-            ball.Draw(gameTime, spriteBatch);
             foreach (var wall in walls)
             {
                 wall.Draw(gameTime, spriteBatch);
             }
+            ball.Draw(gameTime, spriteBatch);
             if (ball.Bounds.Center != new Vector2(50, 200)) //really hacky check to see if title screen should be displayed, also helps check bounds/sprite alignment
             {
                 spriteBatch.DrawString(spriteFont, "Press ESC to end game", new Vector2(2, 2), Color.Gold);

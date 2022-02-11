@@ -31,7 +31,7 @@ namespace FourCorners
         public WallSprite(Vector2 position, int xDirection, int yDirection)
         {
             this.position = position;
-            this.bounds = new BoundingRectangle(position, 32, 32);
+            this.bounds = new BoundingRectangle(position - new Vector2(32,32), 32, 32);
             this.xDirection = xDirection;
             this.yDirection = yDirection;
         }
