@@ -1,12 +1,16 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using FourCorners.Screens;
+using FourCorners.StateManagement;
 
 namespace FourCorners
 {
     public class FourCorners : Game
     {
         private GraphicsDeviceManager _graphics;
+        private readonly ScreenManager _screenManager;
+        
         private SpriteBatch spriteBatch;
         private SpriteFont spriteFont;
 
@@ -21,6 +25,19 @@ namespace FourCorners
             Content.RootDirectory = "Content";
             IsMouseVisible = false;
             Window.Title = "Four Corners";
+
+            var screenFactory = new ScreenFactory();
+            Services.AddService(typeof(IScreenFactory), screenFactory);
+
+            _screenManager = new ScreenManager(this);
+            Components.Add(_screenManager);
+
+            AddInitialScreens();
+        }
+
+        private void AddInitialScreens()
+        {
+            _screenManager.AddScreen(new BackgroundScreen(), null);
         }
 
         protected override void Initialize()
