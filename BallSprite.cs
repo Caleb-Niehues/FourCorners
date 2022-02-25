@@ -20,17 +20,18 @@ namespace FourCorners
         private Texture2D texture;
 
         private Vector2 position = new Vector2(50, 200);
+        private Vector2 oldPosition;
 
         private int xDirection;
         private int yDirection;
-        
+
         private int speed = 50;
 
         private bool up = true;
 
         private short animationFrame;
 
-        private BoundingCircle bounds = new BoundingCircle(new Vector2(50-16, 200-16), 16);
+        private BoundingCircle bounds = new BoundingCircle(new Vector2(50 - 16, 200 - 16), 16);
 
         /// <summary>
         /// 
@@ -44,7 +45,17 @@ namespace FourCorners
 
         private bool moved = false;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public bool Moved => moved;
+
+        private double distance = 0;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public double Distance => distance;
 
         /// <summary>
         /// Loads the sprite texture using the provided ContentManager
@@ -96,6 +107,8 @@ namespace FourCorners
                 if (!Moved) moved = true;
             }
 
+            oldPosition = position;
+            distance = Math.Sqrt(Math.Pow(position.X - oldPosition.X, 2) + Math.Pow(position.Y - oldPosition.Y, 2));
             position += (float)gameTime.ElapsedGameTime.TotalSeconds * new Vector2(xDirection * speed, yDirection * speed);
             bounds.Center.X = position.X - 16;
             bounds.Center.Y = position.Y - 16;
@@ -108,9 +121,6 @@ namespace FourCorners
         /// <param name="spriteBatch">The SpriteBatch to draw with</param>
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            //Update animation timer
-            //animationTimer += gameTime.ElapsedGameTime.TotalSeconds;
-
             //Update animation frame
             if (up) animationFrame = 0;
             else animationFrame = 1;

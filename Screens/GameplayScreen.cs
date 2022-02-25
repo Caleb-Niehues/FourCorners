@@ -24,7 +24,7 @@ namespace FourCorners.Screens
         private WallSprite[] walls;
 
         private SoundEffect drain;
-        float score;
+        private double score;
 
         public GameplayScreen()
         {
@@ -107,6 +107,9 @@ namespace FourCorners.Screens
             // whether a gamepad was ever plugged in, because we don't want to pause
             // on PC if they are playing with a keyboard and have no gamepad at all!
             bool gamePadDisconnected = !gamePadState.IsConnected && input.GamePadWasConnected[playerIndex];
+            
+            bool currentContact = false; //used to reset ball.Contact on iterative check
+            bool oldContact = currentContact; //used to detect frame of contact start/stop - true means contact occurred in last frame
 
             PlayerIndex player;
             if (_pauseAction.Occurred(input, ControllingPlayer, out player) || gamePadDisconnected)
@@ -116,16 +119,23 @@ namespace FourCorners.Screens
             else
             {
                 // Otherwise move the player position.
-                score += gameTime.ElapsedGameTime.Seconds;
                 ball.Update(gameTime);
                 foreach (var wall in walls)
                 {
-                    if (wall.Bounds.CollidesWith(ball.Bounds))
-                    {
-                        ball.Color = Color.Red;
-                        drain.Play();
-                    }
+                    if (wall.Bounds.CollidesWith(ball.Bounds)) currentContact = true;
                     wall.Update(gameTime);
+                }
+
+                if (currentContact)
+                {
+                    score -= ball.Distance;
+                    ball.Color = Color.Red;
+                    if (!oldContact) drain.Play();
+                }
+                else
+                {
+                    score += ball.Distance;
+                    ball.Color = Color.White;
                 }
             }
         }
@@ -144,7 +154,7 @@ namespace FourCorners.Screens
                 wall.Draw(gameTime, spriteBatch);
             }
             ball.Draw(gameTime, spriteBatch);
-            spriteBatch.DrawString(_gameFont, "Score: " + score, new Vector2(2, 2), Color.Gold);
+            spriteBatch.DrawString(_gameFont, score.ToString(), new Vector2(2, 2), Color.Gold);
 
             spriteBatch.End();
 
