@@ -40,7 +40,7 @@ namespace FourCorners.Screens
             if (_content == null)
                 _content = new ContentManager(ScreenManager.Game.Services, "Content");
 
-            _gameFont = _content.Load<SpriteFont>("gamefont");
+            _gameFont = _content.Load<SpriteFont>("File");
 
             // A real game would probably have more content than this sample, so
             // it would take longer to load. We simulate that by delaying for a

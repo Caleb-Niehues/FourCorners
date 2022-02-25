@@ -20,7 +20,7 @@ namespace FourCorners.Screens
 
             if (_content == null) _content = new ContentManager(ScreenManager.Game.Services, "Content");
 
-            _background = _content.Load<Texture2D>("splash");
+            _background = _content.Load<Texture2D>("blank");
             _displayTime = TimeSpan.FromSeconds(2);
         }
 

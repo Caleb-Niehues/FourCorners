@@ -32,7 +32,7 @@ namespace FourCorners.Screens
             if (_content == null)
                 _content = new ContentManager(ScreenManager.Game.Services, "Content");
 
-            _backgroundTexture = _content.Load<Texture2D>("blank");
+            _backgroundTexture = _content.Load<Texture2D>("background");
         }
 
         public override void Unload()

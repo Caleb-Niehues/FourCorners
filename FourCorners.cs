@@ -38,12 +38,14 @@ namespace FourCorners
         private void AddInitialScreens()
         {
             _screenManager.AddScreen(new BackgroundScreen(), null);
+            _screenManager.AddScreen(new MainMenuScreen(), null);
         }
 
         protected override void Initialize()
         {
+            base.Initialize();
             // TODO: Add your initialization logic here
-            ball = new BallSprite();
+            /*ball = new BallSprite();
             walls = new WallSprite[]
             {
                 new WallSprite(new Vector2(250,200), 1, 1),
@@ -51,11 +53,11 @@ namespace FourCorners
                 new WallSprite(new Vector2(450,200), 0, 1)
             };
 
-            base.Initialize();
+            base.Initialize();*/
         }
 
-        protected override void LoadContent()
-        {
+        protected override void LoadContent() { }
+        /*{
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
@@ -63,11 +65,12 @@ namespace FourCorners
             foreach (var wall in walls) wall.LoadContent(Content);
             spriteFont = Content.Load<SpriteFont>("File");
 
-        }
+        }*/
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            base.Update(gameTime);
+            /*if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
             // TODO: Add your update logic here
@@ -83,13 +86,14 @@ namespace FourCorners
                 wall.Update(gameTime);
             }
 
-            base.Update(gameTime);
+            base.Update(gameTime);*/
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
+            base.Draw(gameTime);
+            /*
             // TODO: Add your drawing code here
             spriteBatch.Begin();
             foreach (var wall in walls)
@@ -109,7 +113,7 @@ namespace FourCorners
             }
             spriteBatch.End();
 
-            base.Draw(gameTime);
+            base.Draw(gameTime);*/
         }
     }
 }
