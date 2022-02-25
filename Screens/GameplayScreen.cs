@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using FourCorners.StateManagement;
+using Microsoft.Xna.Framework.Audio;
 
 namespace FourCorners.Screens
 {
@@ -16,16 +17,13 @@ namespace FourCorners.Screens
         private ContentManager _content;
         private SpriteFont _gameFont;
 
-        private Vector2 _playerPosition = new Vector2(100, 100);
-        private Vector2 _enemyPosition = new Vector2(100, 100);
-
-        private readonly Random _random = new Random();
-
         private float _pauseAlpha;
         private readonly InputAction _pauseAction;
 
         private BallSprite ball;
         private WallSprite[] walls;
+
+        private SoundEffect drain;
 
         public GameplayScreen()
         {
@@ -41,7 +39,8 @@ namespace FourCorners.Screens
         public override void Activate()
         {
             if (_content == null) _content = new ContentManager(ScreenManager.Game.Services, "Content");
-            
+
+            drain = _content.Load<SoundEffect>("Drain");
             _gameFont = _content.Load<SpriteFont>("File");
 
             ball = new BallSprite();
@@ -122,6 +121,7 @@ namespace FourCorners.Screens
                     if (wall.Bounds.CollidesWith(ball.Bounds))
                     {
                         ball.Color = Color.Red;
+                        drain.Play();
                     }
                     wall.Update(gameTime);
                 }

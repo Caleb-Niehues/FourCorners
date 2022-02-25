@@ -49,6 +49,18 @@
 /processorParam:TextureFormat=Color
 /build:blank.png
 
+#begin DeeYan-Key-TheGame.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:DeeYan-Key-TheGame.mp3
+
+#begin Drain.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Drain.wav
+
 #begin File.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
