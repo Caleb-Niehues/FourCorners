@@ -108,8 +108,8 @@ namespace FourCorners
             }
 
             oldPosition = position;
-            distance = Math.Sqrt(Math.Pow(position.X - oldPosition.X, 2) + Math.Pow(position.Y - oldPosition.Y, 2));
             position += (float)gameTime.ElapsedGameTime.TotalSeconds * new Vector2(xDirection * speed, yDirection * speed);
+            distance = Math.Sqrt(Math.Pow(position.X - oldPosition.X, 2) + Math.Pow(position.Y - oldPosition.Y, 2));
             bounds.Center.X = position.X - 16;
             bounds.Center.Y = position.Y - 16;
         }
