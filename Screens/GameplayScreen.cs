@@ -24,6 +24,7 @@ namespace FourCorners.Screens
         private WallSprite[] walls;
 
         private SoundEffect drain;
+        float score;
 
         public GameplayScreen()
         {
@@ -115,6 +116,7 @@ namespace FourCorners.Screens
             else
             {
                 // Otherwise move the player position.
+                score += gameTime.ElapsedGameTime.Seconds;
                 ball.Update(gameTime);
                 foreach (var wall in walls)
                 {
@@ -142,7 +144,7 @@ namespace FourCorners.Screens
                 wall.Draw(gameTime, spriteBatch);
             }
             ball.Draw(gameTime, spriteBatch);
-            spriteBatch.DrawString(_gameFont, "Time Survived: N/A", new Vector2(2, 2), Color.Gold);
+            spriteBatch.DrawString(_gameFont, "Score: " + score, new Vector2(2, 2), Color.Gold);
 
             spriteBatch.End();
 
