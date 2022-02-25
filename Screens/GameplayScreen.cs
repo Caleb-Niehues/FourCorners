@@ -24,6 +24,9 @@ namespace FourCorners.Screens
         private float _pauseAlpha;
         private readonly InputAction _pauseAction;
 
+        private BallSprite ball;
+        private WallSprite[] walls;
+
         public GameplayScreen()
         {
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
@@ -37,15 +40,25 @@ namespace FourCorners.Screens
         // Load graphics content for the game
         public override void Activate()
         {
-            if (_content == null)
-                _content = new ContentManager(ScreenManager.Game.Services, "Content");
-
+            if (_content == null) _content = new ContentManager(ScreenManager.Game.Services, "Content");
+            
             _gameFont = _content.Load<SpriteFont>("File");
+
+            ball = new BallSprite();
+            walls = new WallSprite[]
+            {
+                new WallSprite(new Vector2(250,200), 1, 1),
+                new WallSprite(new Vector2(350,200), 0, -1),
+                new WallSprite(new Vector2(450,200), 0, 1)
+            };
+
+            ball.LoadContent(_content);
+            foreach (var wall in walls) wall.LoadContent(_content);
 
             // A real game would probably have more content than this sample, so
             // it would take longer to load. We simulate that by delaying for a
             // while, giving you a chance to admire the beautiful loading screen.
-            Thread.Sleep(1000);
+            //Thread.Sleep(1000);
 
             // once the load has finished, we use ResetElapsedTime to tell the game's
             // timing mechanism that we have just finished a very long frame, and that
@@ -75,25 +88,6 @@ namespace FourCorners.Screens
                 _pauseAlpha = Math.Min(_pauseAlpha + 1f / 32, 1);
             else
                 _pauseAlpha = Math.Max(_pauseAlpha - 1f / 32, 0);
-
-            if (IsActive)
-            {
-                // Apply some random jitter to make the enemy move around.
-                const float randomization = 10;
-
-                _enemyPosition.X += (float)(_random.NextDouble() - 0.5) * randomization;
-                _enemyPosition.Y += (float)(_random.NextDouble() - 0.5) * randomization;
-
-                // Apply a stabilizing force to stop the enemy moving off the screen.
-                var targetPosition = new Vector2(
-                    ScreenManager.GraphicsDevice.Viewport.Width / 2 - _gameFont.MeasureString("Insert Gameplay Here").X / 2,
-                    200);
-
-                _enemyPosition = Vector2.Lerp(_enemyPosition, targetPosition, 0.05f);
-
-                // This game isn't very fun! You could probably improve
-                // it by inserting something more interesting in this space :-)
-            }
         }
 
         // Unlike the Update method, this will only be called when the gameplay screen is active.
@@ -122,29 +116,15 @@ namespace FourCorners.Screens
             else
             {
                 // Otherwise move the player position.
-                var movement = Vector2.Zero;
-
-                if (keyboardState.IsKeyDown(Keys.Left))
-                    movement.X--;
-
-                if (keyboardState.IsKeyDown(Keys.Right))
-                    movement.X++;
-
-                if (keyboardState.IsKeyDown(Keys.Up))
-                    movement.Y--;
-
-                if (keyboardState.IsKeyDown(Keys.Down))
-                    movement.Y++;
-
-                var thumbstick = gamePadState.ThumbSticks.Left;
-
-                movement.X += thumbstick.X;
-                movement.Y -= thumbstick.Y;
-
-                if (movement.Length() > 1)
-                    movement.Normalize();
-
-                _playerPosition += movement * 8f;
+                ball.Update(gameTime);
+                foreach (var wall in walls)
+                {
+                    if (wall.Bounds.CollidesWith(ball.Bounds))
+                    {
+                        ball.Color = Color.Red;
+                    }
+                    wall.Update(gameTime);
+                }
             }
         }
 
@@ -157,10 +137,12 @@ namespace FourCorners.Screens
             var spriteBatch = ScreenManager.SpriteBatch;
 
             spriteBatch.Begin();
-
-            spriteBatch.DrawString(_gameFont, "// TODO", _playerPosition, Color.Green);
-            spriteBatch.DrawString(_gameFont, "Insert Gameplay Here",
-                                   _enemyPosition, Color.DarkRed);
+            foreach (var wall in walls)
+            {
+                wall.Draw(gameTime, spriteBatch);
+            }
+            ball.Draw(gameTime, spriteBatch);
+            spriteBatch.DrawString(_gameFont, "Time Survived: N/A", new Vector2(2, 2), Color.Gold);
 
             spriteBatch.End();
 

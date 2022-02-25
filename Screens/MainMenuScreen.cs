@@ -9,15 +9,15 @@ namespace FourCorners.Screens
         public MainMenuScreen() : base("Main Menu")
         {
             var playGameMenuEntry = new MenuEntry("Play Game");
-            var optionsMenuEntry = new MenuEntry("Options");
+            //var optionsMenuEntry = new MenuEntry("Options");
             var exitMenuEntry = new MenuEntry("Exit");
 
             playGameMenuEntry.Selected += PlayGameMenuEntrySelected;
-            optionsMenuEntry.Selected += OptionsMenuEntrySelected;
+            //optionsMenuEntry.Selected += OptionsMenuEntrySelected;
             exitMenuEntry.Selected += OnCancel;
 
             MenuEntries.Add(playGameMenuEntry);
-            MenuEntries.Add(optionsMenuEntry);
+            //MenuEntries.Add(optionsMenuEntry);
             MenuEntries.Add(exitMenuEntry);
         }
 
@@ -26,10 +26,10 @@ namespace FourCorners.Screens
             LoadingScreen.Load(ScreenManager, true, e.PlayerIndex, new GameplayScreen());
         }
 
-        private void OptionsMenuEntrySelected(object sender, PlayerIndexEventArgs e)
-        {
-            ScreenManager.AddScreen(new OptionsMenuScreen(), e.PlayerIndex);
-        }
+        //private void OptionsMenuEntrySelected(object sender, PlayerIndexEventArgs e)
+        //{
+        //    ScreenManager.AddScreen(new OptionsMenuScreen(), e.PlayerIndex);
+        //}
 
         protected override void OnCancel(PlayerIndex playerIndex)
         {

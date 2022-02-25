@@ -14,9 +14,6 @@ namespace FourCorners
         private SpriteBatch spriteBatch;
         private SpriteFont spriteFont;
 
-        private BallSprite ball;
-        private WallSprite[] walls;
-
         //private Texture2D atlas;
 
         public FourCorners()
