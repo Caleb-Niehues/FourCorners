@@ -24,7 +24,8 @@ namespace FourCorners.Screens
         private WallSprite[] walls;
 
         private SoundEffect drain;
-        private double score;
+        private double scoreBucket;
+        private int score;
 
         private bool currentContact; //used to reset ball.Contact on iterative check
         private bool oldContact; //used to detect frame of contact start/stop - true means contact occurred in last frame
@@ -118,6 +119,10 @@ namespace FourCorners.Screens
             }
             else
             {
+                if (ball.Bounds.Center.X + ball.Bounds.Radius < 0) score = -1;
+                if (ball.Bounds.Center.Y + ball.Bounds.Radius < 0) ball.Up = !ball.Up;
+                //BadImageFormatException
+                if (score < 0) return;
                 // Otherwise move the player position.
                 ball.Update(gameTime);
                 oldContact = currentContact;
@@ -131,14 +136,25 @@ namespace FourCorners.Screens
 
                 if (currentContact)
                 {
-                    score -= ball.Distance/10;
+                    scoreBucket -= ball.Distance;
                     ball.Color = Color.Red;
                     if (!oldContact) drain.Play();
                 }
                 else
                 {
-                    score += ball.Distance/10;
+                    scoreBucket += ball.Distance/10;
                     ball.Color = Color.White;
+                }
+
+                if (scoreBucket > 25)
+                {
+                    score++;
+                    scoreBucket = 0;
+                }
+                else if (scoreBucket < -25)
+                {
+                    score--;
+                    scoreBucket = 0;
                 }
             }
         }
@@ -157,7 +173,9 @@ namespace FourCorners.Screens
                 wall.Draw(gameTime, spriteBatch);
             }
             ball.Draw(gameTime, spriteBatch);
-            spriteBatch.DrawString(_gameFont, "Score: " + score.ToString("2f"), new Vector2(2, 2), Color.Gold);
+            
+            if(score < 0) spriteBatch.DrawString(_gameFont, "Game Over, restart program", new Vector2(2, 2), Color.Gold);
+            else spriteBatch.DrawString(_gameFont, "Score: " + score, new Vector2(2, 2), Color.Gold);
 
             spriteBatch.End();
 

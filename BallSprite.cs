@@ -22,12 +22,35 @@ namespace FourCorners
         private Vector2 position = new Vector2(50, 200);
         private Vector2 oldPosition;
 
-        private int xDirection;
+        private int xDir;
+
+        public int xDirection
+        {
+            get => xDir;
+            set => xDir = value;
+        }
+
+
+
         private int yDirection;
 
         private int speed = 50;
 
         private bool up = true;
+
+        public bool Up
+        {
+            get => up;
+            set => up = value;
+        }
+
+        private bool right = true;
+        
+        public bool Right
+        {
+            get => right;
+            set => right = value;
+        }
 
         private short animationFrame;
 
