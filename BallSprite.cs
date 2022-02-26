@@ -17,42 +17,39 @@ namespace FourCorners
         private MouseState mouseState;
         private MouseState previousMouseState;
 
-        private Texture2D texture;
+        private Vector2 position = new Vector2(50, 224);
 
-        private Vector2 position = new Vector2(50, 200);
-        private Vector2 oldPosition;
+        /// <summary>
+        /// 
+        /// </summary>
+        public Vector2 Position => position;
 
-        private int xDir;
+        private Vector2 direction = new Vector2(1,-1);
 
-        public int xDirection
+        /// <summary>
+        /// 
+        /// </summary>
+        public Vector2 Direction
         {
-            get => xDir;
-            set => xDir = value;
+            get => direction;
+            set => direction = value;
         }
 
+        private int speed = 0;
 
-
-        private int yDirection;
-
-        private int speed = 50;
-
-        private bool up = true;
-
-        public bool Up
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Speed
         {
-            get => up;
-            set => up = value;
+            get => speed;
+            set => speed = value;
         }
 
-        private bool right = true;
-        
-        public bool Right
-        {
-            get => right;
-            set => right = value;
-        }
-
-        private short animationFrame;
+        /// <summary>
+        /// 
+        /// </summary>
+        public double Distance => Math.Sqrt(Math.Pow(speed * direction.X, 2) + Math.Pow(speed * direction.Y, 2));
 
         private BoundingCircle bounds = new BoundingCircle(new Vector2(50 - 16, 200 - 16), 16);
 
@@ -61,24 +58,14 @@ namespace FourCorners
         /// </summary>
         public BoundingCircle Bounds => bounds;
 
+        private short animationFrame;
+
+        private Texture2D texture;
+
         /// <summary>
         /// 
         /// </summary>
         public Color Color { get; set; } = Color.White;
-
-        private bool moved = false;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public bool Moved => moved;
-
-        private double distance = 0;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public double Distance => distance;
 
         /// <summary>
         /// Loads the sprite texture using the provided ContentManager
@@ -101,38 +88,18 @@ namespace FourCorners
             //maybe flip "fast" direction to push you towards the dead zone?
             if (previousMouseState != mouseState && mouseState.LeftButton == ButtonState.Pressed)
             {
-                if (up)
-                {
-                    xDirection = 1;
-                    yDirection = -1;
-                }
-                else
-                {
-                    xDirection = 1;
-                    yDirection = 1;
-                }
-                up = !up;
-                if (!Moved) moved = true;
+                direction.X = 1;
+                direction.Y *= -1;
+                speed = 50;
             }
             else if (previousMouseState != mouseState && mouseState.RightButton == ButtonState.Pressed)
             {
-                if (!up)
-                {
-                    xDirection = -2;
-                    yDirection = -2;
-                }
-                else
-                {
-                    xDirection = -2;
-                    yDirection = 2;
-                }
-                up = !up;
-                if (!Moved) moved = true;
+                direction.X = -1;
+                direction.Y *= -1;
+                speed = 150;
             }
 
-            oldPosition = position;
-            position += (float)gameTime.ElapsedGameTime.TotalSeconds * new Vector2(xDirection * speed, yDirection * speed);
-            distance = Math.Sqrt(Math.Pow(position.X - oldPosition.X, 2) + Math.Pow(position.Y - oldPosition.Y, 2));
+            position += (float)gameTime.ElapsedGameTime.TotalSeconds * new Vector2(Direction.X * speed, Direction.Y * speed);
             bounds.Center.X = position.X - 16;
             bounds.Center.Y = position.Y - 16;
         }
@@ -145,7 +112,7 @@ namespace FourCorners
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             //Update animation frame
-            if (up) animationFrame = 0;
+            if (Direction.Y < 0) animationFrame = 0;
             else animationFrame = 1;
 
             //Draw the sprite

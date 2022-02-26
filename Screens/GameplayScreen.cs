@@ -49,12 +49,14 @@ namespace FourCorners.Screens
             _gameFont = _content.Load<SpriteFont>("File");
 
             ball = new BallSprite();
-            walls = new WallSprite[]
+            int wallCount = 15;
+            int wallSpeed = 25;
+            walls = new WallSprite[2 * wallCount];
+            for (int i = 0; i < wallCount; i++)
             {
-                new WallSprite(new Vector2(250,200), 1, 1),
-                new WallSprite(new Vector2(350,200), 0, -1),
-                new WallSprite(new Vector2(450,200), 0, 1)
-            };
+                walls[i] = new WallSprite(new Vector2(760, i * 32), -(i + 1), 0, wallSpeed - i);
+                walls[i+wallCount] = new WallSprite(new Vector2(760, 448 - (i * 32)), -(i + 1), 0, wallSpeed - i);
+            }
 
             ball.LoadContent(_content);
             foreach (var wall in walls) wall.LoadContent(_content);
@@ -69,7 +71,6 @@ namespace FourCorners.Screens
             // it should not try to catch up.
             ScreenManager.Game.ResetElapsedTime();
         }
-
 
         public override void Deactivate()
         {
@@ -119,10 +120,14 @@ namespace FourCorners.Screens
             }
             else
             {
-                if (ball.Bounds.Center.X + ball.Bounds.Radius < 0) score = -1;
-                if (ball.Bounds.Center.Y + ball.Bounds.Radius < 0) ball.Up = !ball.Up;
-                //BadImageFormatException
-                if (score < 0) return;
+                if (ball.Position.X < 0)
+                    score = -1;
+                if (760 < ball.Position.X + 32)
+                    score = 61;
+                if (ball.Position.Y < 0 || 480 < ball.Position.Y + 32)
+                    ball.Direction = new Vector2(ball.Direction.X, ball.Direction.Y * -1);
+
+                if (score < 0 || score > 50) return;
                 // Otherwise move the player position.
                 ball.Update(gameTime);
                 oldContact = currentContact;
@@ -146,12 +151,12 @@ namespace FourCorners.Screens
                     ball.Color = Color.White;
                 }
 
-                if (scoreBucket > 25)
+                if (scoreBucket > 250)
                 {
                     score++;
                     scoreBucket = 0;
                 }
-                else if (scoreBucket < -25)
+                else if (scoreBucket < -250)
                 {
                     score--;
                     scoreBucket = 0;
@@ -169,12 +174,11 @@ namespace FourCorners.Screens
 
             spriteBatch.Begin();
             foreach (var wall in walls)
-            {
                 wall.Draw(gameTime, spriteBatch);
-            }
             ball.Draw(gameTime, spriteBatch);
             
-            if(score < 0) spriteBatch.DrawString(_gameFont, "Game Over, restart program", new Vector2(2, 2), Color.Gold);
+            if(score < 0 || score == 50) spriteBatch.DrawString(_gameFont, "Game Over, restart program.", new Vector2(2, 2), Color.Gold);
+            else if(score > 60) spriteBatch.DrawString(_gameFont, "You won! Restart.", new Vector2(2, 2), Color.Gold);
             else spriteBatch.DrawString(_gameFont, "Score: " + score, new Vector2(2, 2), Color.Gold);
 
             spriteBatch.End();

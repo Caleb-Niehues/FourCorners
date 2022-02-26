@@ -18,7 +18,7 @@ namespace FourCorners
         private int xDirection;
         private int yDirection;
 
-        private int speed = 50; //doubles as a range
+        private int speed = 0; //doubles as a range
         private double travelled = 0;
 
         private BoundingRectangle bounds;
@@ -34,12 +34,13 @@ namespace FourCorners
         /// <param name="position"></param>
         /// <param name="xDirection"></param>
         /// <param name="yDirection"></param>
-        public WallSprite(Vector2 position, int xDirection, int yDirection)
+        public WallSprite(Vector2 position, int xDirection, int yDirection, int speed)
         {
             this.position = position;
             this.bounds = new BoundingRectangle(position - new Vector2(32,32), 32, 32);
             this.xDirection = xDirection;
             this.yDirection = yDirection;
+            this.speed = speed;
         }
 
         /// <summary>
@@ -58,7 +59,7 @@ namespace FourCorners
         public void Update(GameTime gameTime)
         {
             travelled += gameTime.ElapsedGameTime.TotalSeconds * Math.Sqrt(Math.Pow(xDirection * speed, 2) + Math.Pow(yDirection * speed, 2));
-            if (Math.Abs(travelled) > speed)
+            if (Math.Abs(travelled) > speed * 30)
             {
                 xDirection *= -1;
                 yDirection *= -1;

@@ -15,11 +15,26 @@ namespace FourCorners
 
         private Song backgroundMusic;
 
+        /// <summary>
+        /// The width of the game world
+        /// </summary>
+        public static int GAME_WIDTH = 760;
+
+        /// <summary>
+        /// The height of the game world
+        /// </summary>
+        public static int GAME_HEIGHT = 480;
+
         public FourCorners()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = false;
+
+            _graphics.PreferredBackBufferWidth = GAME_WIDTH;
+            _graphics.PreferredBackBufferHeight = GAME_HEIGHT;
+            _graphics.ApplyChanges();
+
             Window.Title = "Four Corners";
 
             var screenFactory = new ScreenFactory();
