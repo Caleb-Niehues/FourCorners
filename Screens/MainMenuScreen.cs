@@ -9,7 +9,7 @@ namespace FourCorners.Screens
         public MainMenuScreen() : base("Main Menu")
         {
             var playGameMenuEntry = new MenuEntry("Play Game");
-            var optionsMenuEntry = new MenuEntry("Instructions");
+            var optionsMenuEntry = new MenuEntry("Instructions - included separately as a txt file");
             var exitMenuEntry = new MenuEntry("Exit");
 
             playGameMenuEntry.Selected += PlayGameMenuEntrySelected;
