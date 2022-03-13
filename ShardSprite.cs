@@ -9,17 +9,23 @@ using FourCorners.Collisions;
 
 namespace FourCorners
 {
-    public class WallSprite
+    public class ShardSprite
     {
         private Texture2D texture;
+        //FireworkParticleSystem _fireworks;
 
         private Vector2 position;
+        private Rectangle source = new Rectangle(48, 32, 15, 15);
 
-        private int xDirection;
-        private int yDirection;
+        private Vector2 direction;
 
-        private int speed = 0; //doubles as a range
-        private double travelled = 0;
+        private int speed = 0;
+        private bool active = true;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool Active => active;
 
         private BoundingRectangle bounds;
 
@@ -34,12 +40,12 @@ namespace FourCorners
         /// <param name="position"></param>
         /// <param name="xDirection"></param>
         /// <param name="yDirection"></param>
-        public WallSprite(Vector2 position, int xDirection, int yDirection, int speed)
+        public ShardSprite(Vector2 position, Vector2 direction, int speed)
         {
             this.position = position;
-            this.bounds = new BoundingRectangle(position - new Vector2(32,32), 32, 32);
-            this.xDirection = xDirection;
-            this.yDirection = yDirection;
+            this.bounds = new BoundingRectangle(position - new Vector2(15, 15), 15, 15);
+            //_fireworks = new FireworkParticleSystem(this, 20);
+            this.direction = direction;
             this.speed = speed;
         }
 
@@ -53,33 +59,31 @@ namespace FourCorners
         }
 
         /// <summary>
-        /// Updates the sprite's position based on user input
+        /// 
         /// </summary>
-        /// <param name="gameTime">The GameTime</param>
+        /// <param name="gameTime"></param>
         public void Update(GameTime gameTime)
         {
-            travelled += gameTime.ElapsedGameTime.TotalSeconds * Math.Sqrt(Math.Pow(xDirection * speed, 2) + Math.Pow(yDirection * speed, 2));
-            if (Math.Abs(travelled) > speed * 30)
-            {
-                xDirection *= -1;
-                yDirection *= -1;
-                travelled = -speed;
-            }
-            position += (float)gameTime.ElapsedGameTime.TotalSeconds * new Vector2(xDirection * speed, yDirection * speed);
-            bounds.X = position.X - 32;
-            bounds.Y = position.Y - 32;
+            
         }
 
         /// <summary>
-        /// Draws the wall
+        /// 
+        /// </summary>
+        public Vector2 Explode()
+        {
+            active = false;
+            return position;
+        }
+
+        /// <summary>
+        /// Draws the shard
         /// </summary>
         /// <param name="gameTime">The game time</param>
         /// <param name="spriteBatch">The SpriteBatch to draw with</param>
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            //Draw the sprite
-            var source = new Rectangle(0, 32, 32, 32);
-            spriteBatch.Draw(texture, position, source, Color.White);
+            if(active) spriteBatch.Draw(texture, position, source, Color.White);
         }
     }
 }

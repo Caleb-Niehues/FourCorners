@@ -9,6 +9,13 @@ using Microsoft.Xna.Framework.Audio;
 
 namespace FourCorners.Screens
 {
+    public enum GameState
+    {
+        InProgress,
+        Won,
+        Lost
+    }
+
     // This screen implements the actual game logic. It is just a
     // placeholder to get the idea across: you'll probably want to
     // put some more interesting gameplay in here!
@@ -19,16 +26,22 @@ namespace FourCorners.Screens
 
         private float _pauseAlpha;
         private readonly InputAction _pauseAction;
+        private FireworkParticleSystem _fireworks;
 
         private BallSprite ball;
+        private ShardSprite shard;
         private WallSprite[] walls;
 
-        private SoundEffect drain;
+        //private SoundEffect drain;
         private double scoreBucket;
         private int score;
+        private GameState gs = GameState.InProgress;
 
         private bool currentContact; //used to reset ball.Contact on iterative check
         private bool oldContact; //used to detect frame of contact start/stop - true means contact occurred in last frame
+
+        private float _shakeTime;
+        private Matrix shakeTransform = Matrix.Identity;
 
         public GameplayScreen()
         {
@@ -44,11 +57,15 @@ namespace FourCorners.Screens
         public override void Activate()
         {
             if (_content == null) _content = new ContentManager(ScreenManager.Game.Services, "Content");
+            _fireworks = new FireworkParticleSystem(this.ScreenManager.Game, 20);
+            this.ScreenManager.Game.Components.Add(_fireworks);
 
-            drain = _content.Load<SoundEffect>("Drain");
+            //drain = _content.Load<SoundEffect>("Drain");
             _gameFont = _content.Load<SpriteFont>("File");
 
             ball = new BallSprite();
+            shard = new ShardSprite(new Vector2(200, 240), new Vector2(0,0), 0);
+
             int wallCount = 15;
             int wallSpeed = 25;
             walls = new WallSprite[2 * wallCount];
@@ -59,12 +76,8 @@ namespace FourCorners.Screens
             }
 
             ball.LoadContent(_content);
+            shard.LoadContent(_content);
             foreach (var wall in walls) wall.LoadContent(_content);
-
-            // A real game would probably have more content than this sample, so
-            // it would take longer to load. We simulate that by delaying for a
-            // while, giving you a chance to admire the beautiful loading screen.
-            //Thread.Sleep(1000);
 
             // once the load has finished, we use ResetElapsedTime to tell the game's
             // timing mechanism that we have just finished a very long frame, and that
@@ -120,22 +133,40 @@ namespace FourCorners.Screens
             }
             else
             {
-                if (ball.Position.X < 0)
-                    score = -1;
-                if (760 < ball.Position.X + 32)
-                    score = 61;
+                if (ball.Position.X < 0) gs = GameState.Lost;
+                //score = -1;
+                if (760 < ball.Position.X + 32) gs = GameState.Won;
+                //score = 61;
                 if (ball.Position.Y < 0 || 480 < ball.Position.Y + 32)
-                    ball.Direction = new Vector2(ball.Direction.X, ball.Direction.Y * -1);
+                {
+                    ball.Bounce();
+                    _shakeTime = 1500;
+                }
 
-                if (score < 0 || score > 50) return;
+                if (gs != GameState.InProgress)
+                {
+                    _shakeTime = 0;
+                    return;
+                }
                 // Otherwise move the player position.
                 ball.Update(gameTime);
                 oldContact = currentContact;
                 currentContact = false;
 
+                if (shard.Active && shard.Bounds.CollidesWith(ball.Bounds))
+                {
+                    score += 25;
+                    _fireworks.PlaceFirework(shard.Explode());
+                    _shakeTime = 1500;
+                }
+
                 foreach (var wall in walls)
                 {
-                    if (wall.Bounds.CollidesWith(ball.Bounds)) currentContact = true;
+                    if (wall.Bounds.CollidesWith(ball.Bounds))
+                    {
+                        currentContact = true;
+                        _shakeTime += 10;
+                    }
                     wall.Update(gameTime);
                 }
 
@@ -143,11 +174,11 @@ namespace FourCorners.Screens
                 {
                     scoreBucket -= ball.Distance;
                     ball.Color = Color.Red;
-                    if (!oldContact) drain.Play();
+                    //if (!oldContact) drain.Play();
                 }
                 else
                 {
-                    scoreBucket += ball.Distance/10;
+                    scoreBucket += ball.Distance / 10;
                     ball.Color = Color.White;
                 }
 
@@ -161,6 +192,8 @@ namespace FourCorners.Screens
                     score--;
                     scoreBucket = 0;
                 }
+
+                if (score < 0 || score > 50) gs = GameState.Lost;
             }
         }
 
@@ -172,13 +205,22 @@ namespace FourCorners.Screens
             // Our player and enemy are both actually just text strings.
             var spriteBatch = ScreenManager.SpriteBatch;
 
-            spriteBatch.Begin();
+            shakeTransform = Matrix.Identity;
+            if (_shakeTime > 0)
+            {
+                shakeTransform = Matrix.CreateTranslation(MathF.Sin(_shakeTime), MathF.Cos(_shakeTime), 0);
+                _shakeTime -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            }
+
+            spriteBatch.Begin(transformMatrix: shakeTransform);
             foreach (var wall in walls)
                 wall.Draw(gameTime, spriteBatch);
+            shard.Draw(gameTime, spriteBatch);
             ball.Draw(gameTime, spriteBatch);
             
-            if(score < 0 || score == 50) spriteBatch.DrawString(_gameFont, "Game Over, restart program.", new Vector2(2, 2), Color.Gold);
-            else if(score > 60) spriteBatch.DrawString(_gameFont, "You won! Restart.", new Vector2(2, 2), Color.Gold);
+            if(gs == GameState.Lost) spriteBatch.DrawString(_gameFont, "Game Over, restart program.", new Vector2(2, 2), Color.Gold);
+            else if(gs == GameState.Won) spriteBatch.DrawString(_gameFont, "You won! Restart.", new Vector2(2, 2), Color.Gold);
+            else if(score > 25) spriteBatch.DrawString(_gameFont, "Score: " + score + ", you will lose if you exceed 50 (shards give 25).", new Vector2(2, 2), Color.Gold);
             else spriteBatch.DrawString(_gameFont, "Score: " + score, new Vector2(2, 2), Color.Gold);
 
             spriteBatch.End();

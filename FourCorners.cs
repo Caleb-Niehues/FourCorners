@@ -12,8 +12,9 @@ namespace FourCorners
     {
         private GraphicsDeviceManager _graphics;
         private readonly ScreenManager _screenManager;
+        //public FireworkParticleSystem _fireworks;
 
-        private Song backgroundMusic;
+        //private Song backgroundMusic;
 
         /// <summary>
         /// The width of the game world
@@ -54,10 +55,12 @@ namespace FourCorners
 
         protected override void Initialize()
         {
+            //_fireworks = new FireworkParticleSystem(this.Game, 20);
+            //Components.Add(_fireworks);
             base.Initialize();
-            backgroundMusic = Content.Load<Song>("DeeYan-Key-TheGame");
-            MediaPlayer.IsRepeating = true;
-            MediaPlayer.Play(backgroundMusic);
+            //backgroundMusic = Content.Load<Song>("DeeYan-Key-TheGame");
+            //MediaPlayer.IsRepeating = true;
+            //MediaPlayer.Play(backgroundMusic);
         }
 
         protected override void LoadContent() { }

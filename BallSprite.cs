@@ -104,6 +104,12 @@ namespace FourCorners
             bounds.Center.Y = position.Y - 16;
         }
 
+        public void Bounce()
+        {
+            position.Y = Math.Clamp(position.Y, 0, 448);
+            direction.Y *= -1;
+        }
+
         /// <summary>
         /// Draws the animated ball
         /// </summary>
