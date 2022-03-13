@@ -39,6 +39,9 @@ namespace FourCorners.Screens
         private bool currentContact; //used to reset ball.Contact on iterative check
         private bool oldContact; //used to detect frame of contact start/stop - true means contact occurred in last frame
 
+        private float _shakeTime;
+        private Matrix shakeTransform = Matrix.Identity;
+
         public GameplayScreen()
         {
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
@@ -132,9 +135,16 @@ namespace FourCorners.Screens
                 if (760 < ball.Position.X + 32) gs = GameState.Won;
                 //score = 61;
                 if (ball.Position.Y < 0 || 480 < ball.Position.Y + 32)
-                    ball.Direction = new Vector2(ball.Direction.X, ball.Direction.Y * -1);
+                {
+                    ball.Bounce();
+                    _shakeTime = 1500;
+                }
 
-                if (gs != GameState.InProgress) return;
+                if (gs != GameState.InProgress)
+                {
+                    _shakeTime = 0;
+                    return;
+                }
                 // Otherwise move the player position.
                 ball.Update(gameTime);
                 oldContact = currentContact;
@@ -144,11 +154,16 @@ namespace FourCorners.Screens
                 {
                     score += 25;
                     shard.Explode();
+                    _shakeTime = 1500;
                 }
 
                 foreach (var wall in walls)
                 {
-                    if (wall.Bounds.CollidesWith(ball.Bounds)) currentContact = true;
+                    if (wall.Bounds.CollidesWith(ball.Bounds))
+                    {
+                        currentContact = true;
+                        _shakeTime += 10;
+                    }
                     wall.Update(gameTime);
                 }
 
@@ -187,7 +202,14 @@ namespace FourCorners.Screens
             // Our player and enemy are both actually just text strings.
             var spriteBatch = ScreenManager.SpriteBatch;
 
-            spriteBatch.Begin();
+            shakeTransform = Matrix.Identity;
+            if (_shakeTime > 0)
+            {
+                shakeTransform = Matrix.CreateTranslation(MathF.Sin(_shakeTime), MathF.Cos(_shakeTime), 0);
+                _shakeTime -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            }
+
+            spriteBatch.Begin(transformMatrix: shakeTransform);
             foreach (var wall in walls)
                 wall.Draw(gameTime, spriteBatch);
             shard.Draw(gameTime, spriteBatch);
