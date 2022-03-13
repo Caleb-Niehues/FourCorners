@@ -12,6 +12,7 @@ namespace FourCorners
     {
         private GraphicsDeviceManager _graphics;
         private readonly ScreenManager _screenManager;
+        //public FireworkParticleSystem _fireworks;
 
         //private Song backgroundMusic;
 
@@ -54,6 +55,8 @@ namespace FourCorners
 
         protected override void Initialize()
         {
+            //_fireworks = new FireworkParticleSystem(this.Game, 20);
+            //Components.Add(_fireworks);
             base.Initialize();
             //backgroundMusic = Content.Load<Song>("DeeYan-Key-TheGame");
             //MediaPlayer.IsRepeating = true;

@@ -12,6 +12,7 @@ namespace FourCorners
     public class ShardSprite
     {
         private Texture2D texture;
+        //FireworkParticleSystem _fireworks;
 
         private Vector2 position;
         private Rectangle source = new Rectangle(48, 32, 15, 15);
@@ -43,6 +44,7 @@ namespace FourCorners
         {
             this.position = position;
             this.bounds = new BoundingRectangle(position - new Vector2(15, 15), 15, 15);
+            //_fireworks = new FireworkParticleSystem(this, 20);
             this.direction = direction;
             this.speed = speed;
         }
@@ -68,9 +70,10 @@ namespace FourCorners
         /// <summary>
         /// 
         /// </summary>
-        public void Explode()
+        public Vector2 Explode()
         {
             active = false;
+            return position;
         }
 
         /// <summary>

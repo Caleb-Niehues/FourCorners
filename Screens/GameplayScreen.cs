@@ -26,6 +26,7 @@ namespace FourCorners.Screens
 
         private float _pauseAlpha;
         private readonly InputAction _pauseAction;
+        private FireworkParticleSystem _fireworks;
 
         private BallSprite ball;
         private ShardSprite shard;
@@ -56,6 +57,8 @@ namespace FourCorners.Screens
         public override void Activate()
         {
             if (_content == null) _content = new ContentManager(ScreenManager.Game.Services, "Content");
+            _fireworks = new FireworkParticleSystem(this.ScreenManager.Game, 20);
+            this.ScreenManager.Game.Components.Add(_fireworks);
 
             //drain = _content.Load<SoundEffect>("Drain");
             _gameFont = _content.Load<SpriteFont>("File");
@@ -153,7 +156,7 @@ namespace FourCorners.Screens
                 if (shard.Active && shard.Bounds.CollidesWith(ball.Bounds))
                 {
                     score += 25;
-                    shard.Explode();
+                    _fireworks.PlaceFirework(shard.Explode());
                     _shakeTime = 1500;
                 }
 

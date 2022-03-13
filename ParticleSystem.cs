@@ -66,6 +66,11 @@ namespace FourCorners
         Texture2D texture;
 
         /// <summary>
+        /// 
+        /// </summary>
+        Rectangle source = new Rectangle(32, 32, 15, 15);
+
+        /// <summary>
         /// The origin when we're drawing textures 
         /// </summary>
         Vector2 origin;
@@ -239,7 +244,7 @@ namespace FourCorners
                 if (!p.Active)
                     continue;
 
-                spriteBatch.Draw(texture, p.Position, null, p.Color,
+                spriteBatch.Draw(texture, p.Position, source, p.Color,
                     p.Rotation, origin, p.Scale, SpriteEffects.None, 0.0f);
             }
 
